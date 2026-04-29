@@ -1,11 +1,15 @@
 {
   "resources": {
     "models": {
+      "anubis": {
+        "path": "anubis/anubis.obj",
+        "flip_uvs": true
+      }
     }
   },
   "window": {
     "height": 600,
-    "title": "Hello, window!",
+    "title": "RG Projekat",
     "width": 800
   }
 }
