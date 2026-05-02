@@ -84,14 +84,14 @@ void MyController::terminate() {
 void MyController::draw_statue() {
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
     auto shader = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("basic");
-    auto anubis_statue = engine::core::Controller::get<engine::resources::ResourcesController>()->model("anubis");
+    auto kadinjaca_model = engine::core::Controller::get<engine::resources::ResourcesController>()->model("kadinjaca");
 
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
     shader->set_mat4("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)));
 
-    anubis_statue->draw(shader);
+    kadinjaca_model->draw(shader);
 }
 
 void MyController::draw_skybox() {

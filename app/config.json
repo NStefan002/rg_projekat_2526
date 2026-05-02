@@ -1,8 +1,8 @@
 {
   "resources": {
     "models": {
-      "anubis": {
-        "path": "anubis/anubis.obj",
+      "kadinjaca": {
+        "path": "kadinjaca/kadinjaca.obj",
         "flip_uvs": true
       }
     }
