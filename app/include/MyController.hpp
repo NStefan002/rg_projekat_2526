@@ -8,6 +8,8 @@ private:
 
     void draw_model();
     void draw_skybox();
+    // restricts camera movement to a certain area
+    void restrict_camera();
 
 public:
     std::string_view name() const override;

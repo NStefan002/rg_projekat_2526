@@ -71,6 +71,8 @@ void MyController::update() {
         camera->rotate_camera(mouse.dx, mouse.dy);
         camera->zoom(mouse.scroll);
     }
+
+    restrict_camera();
 }
 
 void MyController::begin_draw() {
@@ -106,4 +108,11 @@ void MyController::draw_skybox() {
     auto shader = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("skybox");
     auto skybox_cube = engine::core::Controller::get<engine::resources::ResourcesController>()->skybox("skybox");
     engine::core::Controller::get<engine::graphics::GraphicsController>()->draw_skybox(shader, skybox_cube);
+}
+
+void MyController::restrict_camera() {
+    auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
+    camera->Position.x = std::clamp(camera->Position.x, -85.0f, 10.0f);
+    camera->Position.y = std::clamp(camera->Position.y, 0.0f, 30.0f);
+    camera->Position.z = std::clamp(camera->Position.z, -14.0f, 30.0f);
 }
