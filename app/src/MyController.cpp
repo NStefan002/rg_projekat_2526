@@ -78,7 +78,7 @@ void MyController::begin_draw() {
 }
 
 void MyController::draw() {
-    draw_statue();
+    draw_model();
     draw_skybox();
 }
 
@@ -89,7 +89,7 @@ void MyController::end_draw() {
 void MyController::terminate() {
 }
 
-void MyController::draw_statue() {
+void MyController::draw_model() {
     auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
     auto shader = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("basic");
     auto kadinjaca_model = engine::core::Controller::get<engine::resources::ResourcesController>()->model("kadinjaca");
@@ -97,7 +97,7 @@ void MyController::draw_statue() {
     shader->use();
     shader->set_mat4("projection", graphics->projection_matrix());
     shader->set_mat4("view", graphics->camera()->view_matrix());
-    shader->set_mat4("model", glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)));
+    shader->set_mat4("model", glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
 
     kadinjaca_model->draw(shader);
 }
