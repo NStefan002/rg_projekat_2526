@@ -68,6 +68,7 @@ void MyGUIController::draw_help() {
     ImGui::Text("Mouse scroll: Zoom camera");
     ImGui::Text("C: Toggle camera info");
     ImGui::Text("H: Toggle help");
+    ImGui::Text("F3: Toggle cursor");
     ImGui::End();
 }
 

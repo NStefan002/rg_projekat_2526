@@ -5,6 +5,7 @@
 class MyController final : public engine::core::Controller {
 private:
     void draw_statue();
+    bool cursor_enabled = false;
     void draw_skybox();
 
 public:

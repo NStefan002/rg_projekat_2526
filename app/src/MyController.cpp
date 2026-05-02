@@ -10,6 +10,9 @@ void MyController::initialize() {
     auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
     camera->Position = glm::vec3(13.0f, 1.0f, 0.0f);
     camera->Front = glm::vec3(-1.0f, -0.01f, -0.01f);
+
+    auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+    platform->set_enable_cursor(cursor_enabled);
 }
 
 bool MyController::loop() {
@@ -24,11 +27,6 @@ void MyController::poll_events() {
 }
 
 void MyController::update() {
-    // disable camera movement if GUI is active
-    if (engine::core::Controller::get<MyGUIController>()->is_active()) {
-        return;
-    }
-
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
     float delta_time = platform->dt();
@@ -60,9 +58,19 @@ void MyController::update() {
         camera->rotate_camera(5.0f, 0.0f);
     }
 
-    auto mouse = platform->mouse();
-    camera->rotate_camera(mouse.dx, mouse.dy);
-    camera->zoom(mouse.scroll);
+    if (platform->key(engine::platform::KEY_F3).state() == engine::platform::Key::State::JustPressed) {
+        cursor_enabled = !cursor_enabled;
+        platform->set_enable_cursor(cursor_enabled);
+    }
+
+    if (!cursor_enabled) {
+        // use mouse to rotate camera only when cursor is disabled
+        // (when the cursor is enabled, the user might want to interact
+        // with the GUI instead of rotating the camera)
+        auto mouse = platform->mouse();
+        camera->rotate_camera(mouse.dx, mouse.dy);
+        camera->zoom(mouse.scroll);
+    }
 }
 
 void MyController::begin_draw() {
