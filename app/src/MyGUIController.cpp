@@ -66,7 +66,8 @@ void MyGUIController::draw_help() {
     ImGui::Text("Arrow keys: Rotate camera");
     ImGui::Text("Mouse movement: Rotate camera");
     ImGui::Text("Mouse scroll: Zoom camera");
-    ImGui::Text("G: Toggle GUI");
+    ImGui::Text("C: Toggle camera info");
+    ImGui::Text("H: Toggle help");
     ImGui::End();
 }
 
