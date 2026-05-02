@@ -3,6 +3,11 @@
 #include <string_view>
 
 class MyController final : public engine::core::Controller {
+private:
+    void draw_statue();
+    void draw_skybox();
+
+public:
     std::string_view name() const override;
     void initialize() override;
     bool loop() override;
@@ -12,7 +17,4 @@ class MyController final : public engine::core::Controller {
     void draw() override;
     void end_draw() override;
     void terminate() override;
-
-    void draw_statue();
-    void draw_skybox();
 };
