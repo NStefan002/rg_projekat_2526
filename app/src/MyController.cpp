@@ -1,4 +1,5 @@
 #include <MyController.hpp>
+#include <MyGUIController.hpp>
 
 std::string_view MyController::name() const {
     return "MyController";
@@ -23,6 +24,11 @@ void MyController::poll_events() {
 }
 
 void MyController::update() {
+    // disable camera movement if GUI is active
+    if (engine::core::Controller::get<MyGUIController>()->is_active()) {
+        return;
+    }
+
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
     float delta_time = platform->dt();
