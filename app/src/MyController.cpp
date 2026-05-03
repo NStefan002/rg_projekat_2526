@@ -8,8 +8,8 @@ std::string_view MyController::name() const {
 void MyController::initialize() {
     engine::graphics::OpenGL::enable_depth_testing();
     auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
-    camera->Position = glm::vec3(13.0f, 1.0f, 0.0f);
-    camera->Front = glm::vec3(-1.0f, -0.01f, -0.01f);
+    camera->Position = camera_start_position;
+    camera->Front = camera_start_front;
 
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     platform->set_enable_cursor(cursor_enabled);

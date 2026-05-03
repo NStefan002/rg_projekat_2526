@@ -4,6 +4,11 @@
 
 class MyController final : public engine::core::Controller {
 private:
+    // camera constants (used to initialize the camera position and front vector)
+    const glm::vec3 camera_start_position = {13.0f, 1.0f, 0.0f};
+    const glm::vec3 camera_start_front = {-1.0f, -0.01f, -0.01f};
+
+    // cursor state
     bool cursor_enabled = false;
 
     void draw_model();
