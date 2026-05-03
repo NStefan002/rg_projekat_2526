@@ -69,6 +69,7 @@ void MyGUIController::draw_help() {
     ImGui::Text("C: Toggle camera info");
     ImGui::Text("H: Toggle help");
     ImGui::Text("F3: Toggle cursor");
+    ImGui::Text("ESC: Exit application");
     ImGui::End();
 }
 
