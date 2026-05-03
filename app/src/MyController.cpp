@@ -131,7 +131,10 @@ void MyController::set_light_uniforms(engine::resources::Shader *shader) {
     glm::vec3 pt_light_diffuse = pt_light_color * pt_light_intensity;
     glm::vec3 pt_light_ambient = pt_light_diffuse * 0.1f;
     glm::vec3 pt_light_specular = pt_light_color;
-    shader->set_vec3("point_light.position", pt_light_position);
+    shader->set_int("num_point_lights", static_cast<int>(pt_light_positions.size()));
+    for (size_t i = 0; i < pt_light_positions.size(); i++) {
+        shader->set_vec3(std::format("point_light_positions[{}]", i), pt_light_positions[i]);
+    }
     shader->set_vec3("point_light.ambient", pt_light_ambient);
     shader->set_vec3("point_light.diffuse", pt_light_diffuse);
     shader->set_vec3("point_light.specular", pt_light_specular);

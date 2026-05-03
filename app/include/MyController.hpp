@@ -1,6 +1,7 @@
 #pragma once
 #include <engine/core/Engine.hpp>
 #include <string_view>
+#include <vector>
 
 class MyController final : public engine::core::Controller {
 private:
@@ -18,7 +19,16 @@ private:
     glm::vec3 dir_light_specular = {0.4f, 0.4f, 0.4f};
 
     // point light
-    glm::vec3 pt_light_position = {0.0f, 3.0f, 2.0f};
+    std::vector<glm::vec3> pt_light_positions = {
+            {2.5f, 3.0f, 0.0f},
+            {-10.0f, 3.0f, 0.0f},
+            {-28.0f, -1.0f, 0.5f},
+            {-40.0f, 0.5f, 1.0f},
+            {-45.0f, 0.5f, 1.5f},
+            {-55.0f, -1.0f, 9.0f},
+            {-62.5f, -0.5f, 14.0f},
+            {-68.0f, -1.0f, 34.0f},
+    };
     glm::vec3 pt_light_color = {1.0f, 0.7f, 0.3f};
     float pt_light_intensity = 1.0f;
     bool pt_light_enabled = true;

@@ -41,8 +41,8 @@ struct DirectionalLight {
 uniform DirectionalLight dir_light;
 
 // Point light
+# define MAX_POINT_LIGHTS 10
 struct PointLight {
-    vec3 position;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -52,6 +52,8 @@ struct PointLight {
     bool enabled;
 };
 uniform PointLight point_light;
+uniform vec3 point_light_positions[MAX_POINT_LIGHTS];
+uniform int num_point_lights;
 
 vec3 calc_dir_light(DirectionalLight light, vec3 norm, vec3 view_dir, vec3 diff_tex, vec3 spec_tex) {
     vec3 light_dir = normalize(-light.direction);
@@ -64,12 +66,12 @@ vec3 calc_dir_light(DirectionalLight light, vec3 norm, vec3 view_dir, vec3 diff_
     return ambient + diffuse + specular;
 }
 
-vec3 calc_point_light(PointLight light, vec3 norm, vec3 view_dir, vec3 diff_tex, vec3 spec_tex) {
-    vec3 light_dir = normalize(light.position - frag_pos);
+vec3 calc_point_light(PointLight light, vec3 light_position, vec3 norm, vec3 view_dir, vec3 diff_tex, vec3 spec_tex) {
+    vec3 light_dir = normalize(light_position - frag_pos);
     float diff = max(dot(norm, light_dir), 0.0);
     vec3 reflect_dir = reflect(-light_dir, norm);
     float spec = pow(max(dot(view_dir, reflect_dir), 0.0), 32.0);
-    float dist = length(light.position - frag_pos);
+    float dist = length(light_position - frag_pos);
     float attenuation = 1.0 / (light.constant + light.linear * dist + light.quadratic * dist * dist);
     vec3 ambient = light.ambient  * diff_tex  * attenuation;
     vec3 diffuse = light.diffuse  * diff * diff_tex  * attenuation;
@@ -85,7 +87,9 @@ void main() {
 
     vec3 result = calc_dir_light(dir_light, norm, view_dir, diff_tex, spec_tex);
     if (point_light.enabled) {
-        result += calc_point_light(point_light, norm, view_dir, diff_tex, spec_tex);
+        for (int i = 0; i < num_point_lights; i++) {
+            result += calc_point_light(point_light, point_light_positions[i], norm, view_dir, diff_tex, spec_tex);
+        }
     }
     FragColor = vec4(result, 1.0);
 }
