@@ -11,10 +11,24 @@ private:
     // cursor state
     bool cursor_enabled = false;
 
-    void draw_model();
+    // directional light
+    glm::vec3 dir_light_direction = {-0.5f, -1.0f, -0.3f};
+    glm::vec3 dir_light_ambient = {0.2f, 0.2f, 0.2f};
+    glm::vec3 dir_light_diffuse = {0.6f, 0.6f, 0.6f};
+    glm::vec3 dir_light_specular = {0.4f, 0.4f, 0.4f};
+
+    // point light
+    glm::vec3 pt_light_position = {0.0f, 3.0f, 2.0f};
+    glm::vec3 pt_light_color = {1.0f, 0.7f, 0.3f};
+    float pt_light_intensity = 1.0f;
+    bool pt_light_enabled = true;
+
+    void draw_model(engine::resources::Shader *shader);
     void draw_skybox();
     // restricts camera movement to a certain area
     void restrict_camera();
+    // updates the light properties in the shader
+    void set_light_uniforms(engine::resources::Shader *shader);
 
 public:
     std::string_view name() const override;

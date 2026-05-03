@@ -80,7 +80,9 @@ void MyController::begin_draw() {
 }
 
 void MyController::draw() {
-    draw_model();
+    auto shader = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("lighting");
+    set_light_uniforms(shader);
+    draw_model(shader);
     draw_skybox();
 }
 
@@ -91,16 +93,8 @@ void MyController::end_draw() {
 void MyController::terminate() {
 }
 
-void MyController::draw_model() {
-    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
-    auto shader = engine::core::Controller::get<engine::resources::ResourcesController>()->shader("basic");
+void MyController::draw_model(engine::resources::Shader *shader) {
     auto kadinjaca_model = engine::core::Controller::get<engine::resources::ResourcesController>()->model("kadinjaca");
-
-    shader->use();
-    shader->set_mat4("projection", graphics->projection_matrix());
-    shader->set_mat4("view", graphics->camera()->view_matrix());
-    shader->set_mat4("model", glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
-
     kadinjaca_model->draw(shader);
 }
 
@@ -115,4 +109,34 @@ void MyController::restrict_camera() {
     camera->Position.x = std::clamp(camera->Position.x, -85.0f, 10.0f);
     camera->Position.y = std::clamp(camera->Position.y, 0.0f, 30.0f);
     camera->Position.z = std::clamp(camera->Position.z, -14.0f, 30.0f);
+}
+
+void MyController::set_light_uniforms(engine::resources::Shader *shader) {
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+
+    shader->use();
+    shader->set_mat4("projection", graphics->projection_matrix());
+    shader->set_mat4("view", graphics->camera()->view_matrix());
+    shader->set_mat4("model", glm::scale(glm::mat4(1.0f), glm::vec3(1.0f)));
+    shader->set_vec3("view_pos", graphics->camera()->Position);
+
+    // directional light
+    shader->set_vec3("dir_light.direction", dir_light_direction);
+    shader->set_vec3("dir_light.ambient", dir_light_ambient);
+    shader->set_vec3("dir_light.diffuse", dir_light_diffuse);
+    shader->set_vec3("dir_light.specular", dir_light_specular);
+
+    // point light
+    glm::vec3 pt_light_diffuse = pt_light_color * pt_light_intensity;
+    glm::vec3 pt_light_ambient = pt_light_diffuse * 0.1f;
+    glm::vec3 pt_light_specular = pt_light_color;
+    shader->set_vec3("point_light.position", pt_light_position);
+    shader->set_vec3("point_light.ambient", pt_light_ambient);
+    shader->set_vec3("point_light.diffuse", pt_light_diffuse);
+    shader->set_vec3("point_light.specular", pt_light_specular);
+    shader->set_float("point_light.constant", 1.0f);
+    shader->set_float("point_light.linear", 0.09f);
+    shader->set_float("point_light.quadratic", 0.032f);
+    shader->set_bool("point_light.enabled", pt_light_enabled);
 }
