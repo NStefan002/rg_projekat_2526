@@ -1,6 +1,6 @@
 #pragma once
+#include <MyGUIController.hpp>
 #include <engine/core/Engine.hpp>
-#include <string_view>
 #include <vector>
 
 class MyController final : public engine::core::Controller {
@@ -54,6 +54,11 @@ private:
     void set_light_uniforms(engine::resources::Shader *shader);
     // updates the event stage based on the timer
     void update_event_stage(float delta_time);
+
+    // so that MyGUIController can access the point light properties to display them
+    // in the GUI, and to allow MyGUIController to modify the point light properties
+    // when the user interacts with the GUI
+    friend MyGUIController;
 
 public:
     std::string_view name() const override;

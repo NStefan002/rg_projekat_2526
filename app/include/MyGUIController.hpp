@@ -6,9 +6,11 @@ class MyGUIController final : public engine::core::Controller {
 private:
     bool show_camera_info = false;
     bool show_help = true;
+    bool show_point_light_menu = false;
 
     void draw_camera_info();
     void draw_help();
+    void draw_point_light_menu();
 
 public:
     std::string_view name() const override;

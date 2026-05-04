@@ -1,3 +1,4 @@
+#include <MyController.hpp>
 #include <MyGUIController.hpp>
 #include <imgui.h>
 
@@ -26,6 +27,10 @@ void MyGUIController::update() {
     if (platform->key(engine::platform::KEY_H).state() == engine::platform::Key::State::JustPressed) {
         show_help = !show_help;
     }
+    // toggle point light menu
+    if (platform->key(engine::platform::KEY_L).state() == engine::platform::Key::State::JustPressed) {
+        show_point_light_menu = !show_point_light_menu;
+    }
 }
 
 void MyGUIController::begin_draw() {
@@ -39,6 +44,9 @@ void MyGUIController::draw() {
     }
     if (show_help) {
         draw_help();
+    }
+    if (show_point_light_menu) {
+        draw_point_light_menu();
     }
 }
 
@@ -68,12 +76,24 @@ void MyGUIController::draw_help() {
     ImGui::Text("Mouse scroll: Zoom camera");
     ImGui::Text("C: Toggle camera info");
     ImGui::Text("H: Toggle help");
+    ImGui::Text("L: Toggle point light colors");
     ImGui::Text("F3: Toggle cursor");
     ImGui::Text("F4: Trigger event");
     ImGui::Text("ESC: Exit application");
     ImGui::End();
 }
 
+void MyGUIController::draw_point_light_menu() {
+    auto main_ctrl = engine::core::Controller::get<MyController>();
+    ImGui::Begin("Point light menu");
+    ImGui::Checkbox("Enable", &main_ctrl->pt_light_enabled);
+    ImGui::SliderFloat("Red", &main_ctrl->pt_light_color[0], 0.0f, 1.0f);
+    ImGui::SliderFloat("Green", &main_ctrl->pt_light_color[1], 0.0f, 1.0f);
+    ImGui::SliderFloat("Blue", &main_ctrl->pt_light_color[2], 0.0f, 1.0f);
+    ImGui::SliderFloat("Intensity", &main_ctrl->pt_light_intensity, 0.0f, 10.0f);
+    ImGui::End();
+}
+
 bool MyGUIController::is_active() const {
-    return show_camera_info || show_help;
+    return show_camera_info || show_help || show_point_light_menu;
 }

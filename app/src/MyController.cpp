@@ -1,5 +1,4 @@
 #include <MyController.hpp>
-#include <MyGUIController.hpp>
 #include <spdlog/spdlog.h>
 
 std::string_view MyController::name() const {
