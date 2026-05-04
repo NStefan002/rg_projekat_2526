@@ -29,22 +29,22 @@ void MyGUIController::update() {
 }
 
 void MyGUIController::begin_draw() {
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    graphics->begin_gui();
 }
 
 void MyGUIController::draw() {
-
-    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
-    graphics->begin_gui();
     if (show_camera_info) {
         draw_camera_info();
     }
     if (show_help) {
         draw_help();
     }
-    graphics->end_gui();
 }
 
 void MyGUIController::end_draw() {
+    auto graphics = engine::core::Controller::get<engine::graphics::GraphicsController>();
+    graphics->end_gui();
 }
 
 void MyGUIController::terminate() {
