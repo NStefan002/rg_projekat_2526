@@ -1,5 +1,6 @@
 #include <MyController.hpp>
 #include <MyGUIController.hpp>
+#include <spdlog/spdlog.h>
 
 std::string_view MyController::name() const {
     return "MyController";
@@ -24,6 +25,12 @@ bool MyController::loop() {
 }
 
 void MyController::poll_events() {
+    auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
+
+    if (platform->key(engine::platform::KEY_F4).state() == engine::platform::Key::State::JustPressed) {
+        event_triggered = true;
+        spdlog::info("Event triggered");
+    }
 }
 
 void MyController::update() {
@@ -72,6 +79,9 @@ void MyController::update() {
         camera->zoom(mouse.scroll);
     }
 
+    if (event_triggered) {
+        update_event_stage(delta_time);
+    }
     restrict_camera();
 }
 
@@ -142,4 +152,47 @@ void MyController::set_light_uniforms(engine::resources::Shader *shader) {
     shader->set_float("point_light.linear", 0.09f);
     shader->set_float("point_light.quadratic", 0.032f);
     shader->set_bool("point_light.enabled", pt_light_enabled);
+}
+
+void MyController::update_event_stage(float delta_time) {
+    event_timer += delta_time;
+    switch (event_stage) {
+        case Stage::Day: {
+            if (event_timer >= night_duration) {
+                event_stage = Stage::Night;
+                event_timer = 0.0f;
+                event_triggered = false;
+                spdlog::info("Event stage changed to Night");
+                break;
+            }
+            if (event_timer >= night_duration / 2 && !pt_light_enabled) {
+                // at the halfway point of the day stage, enable the point light to simulate turning on the street lights
+                pt_light_enabled = true;
+                spdlog::info("Point light enabled");
+            }
+            // gradually decrease the directional light intensity to simulate the sun setting
+            float progress = std::min(1.0f, event_timer / night_duration);
+            dir_light_diffuse = (1.0f - progress) * dir_light_diffuse_orig;
+            break;
+        }
+        case Stage::Night: {
+            if (event_timer >= day_duration) {
+                event_stage = Stage::Day;
+                event_timer = 0.0f;
+                event_triggered = false;
+                dir_light_diffuse = dir_light_diffuse_orig;
+                spdlog::info("Event stage changed to Day");
+                break;
+            }
+            if (event_timer >= day_duration / 2 && pt_light_enabled) {
+                // at the halfway point of the night stage, disable the point light to simulate turning off the street lights
+                pt_light_enabled = false;
+                spdlog::info("Point light disabled");
+            }
+            // gradually increase the directional light intensity to simulate the sun rising
+            float progress = std::min(1.0f, event_timer / day_duration);
+            dir_light_diffuse = progress * dir_light_diffuse_orig;
+            break;
+        }
+    }
 }

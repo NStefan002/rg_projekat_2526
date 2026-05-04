@@ -13,9 +13,10 @@ private:
     bool cursor_enabled = false;
 
     // directional light
+    const glm::vec3 dir_light_diffuse_orig = {0.6f, 0.6f, 0.6f};
     glm::vec3 dir_light_direction = {-0.5f, -1.0f, -0.3f};
     glm::vec3 dir_light_ambient = {0.2f, 0.2f, 0.2f};
-    glm::vec3 dir_light_diffuse = {0.6f, 0.6f, 0.6f};
+    glm::vec3 dir_light_diffuse = dir_light_diffuse_orig;
     glm::vec3 dir_light_specular = {0.4f, 0.4f, 0.4f};
 
     // point light
@@ -31,7 +32,19 @@ private:
     };
     glm::vec3 pt_light_color = {1.0f, 0.7f, 0.3f};
     float pt_light_intensity = 1.0f;
-    bool pt_light_enabled = true;
+    bool pt_light_enabled = false;
+
+    // chain of events
+    enum class Stage {
+        Day,
+        Night,
+    };
+    Stage event_stage = Stage::Day;
+    float event_timer = 0.0f;
+    bool event_triggered = false;
+    const float night_duration = 10.0f;
+    const float lightshow_duration = 5.0f;
+    const float day_duration = 10.0f;
 
     void draw_model(engine::resources::Shader *shader);
     void draw_skybox();
@@ -39,6 +52,8 @@ private:
     void restrict_camera();
     // updates the light properties in the shader
     void set_light_uniforms(engine::resources::Shader *shader);
+    // updates the event stage based on the timer
+    void update_event_stage(float delta_time);
 
 public:
     std::string_view name() const override;
