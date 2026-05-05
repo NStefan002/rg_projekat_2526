@@ -91,6 +91,12 @@ void MyGUIController::draw_point_light_menu() {
     ImGui::SliderFloat("Green", &main_ctrl->pt_light_color[1], 0.0f, 1.0f);
     ImGui::SliderFloat("Blue", &main_ctrl->pt_light_color[2], 0.0f, 1.0f);
     ImGui::SliderFloat("Intensity", &main_ctrl->pt_light_intensity, 0.0f, 10.0f);
+    if (ImGui::Button("Reset to default")) {
+        main_ctrl->pt_light_color[0] = main_ctrl->pt_light_color_orig[0];
+        main_ctrl->pt_light_color[1] = main_ctrl->pt_light_color_orig[1];
+        main_ctrl->pt_light_color[2] = main_ctrl->pt_light_color_orig[2];
+        main_ctrl->pt_light_intensity = main_ctrl->pt_light_intensity_orig;
+    }
     ImGui::End();
 }
 

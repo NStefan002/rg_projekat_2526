@@ -20,7 +20,7 @@ private:
     glm::vec3 dir_light_specular = {0.4f, 0.4f, 0.4f};
 
     // point light
-    std::vector<glm::vec3> pt_light_positions = {
+    const std::vector<glm::vec3> pt_light_positions = {
             {2.5f, 3.0f, 0.0f},
             {-10.0f, 3.0f, 0.0f},
             {-28.0f, -1.0f, 0.5f},
@@ -30,6 +30,8 @@ private:
             {-62.5f, -0.5f, 14.0f},
             {-68.0f, -1.0f, 34.0f},
     };
+    const glm::vec3 pt_light_color_orig = {1.0f, 0.7f, 0.3f};
+    const float pt_light_intensity_orig = 1.0f;
     glm::vec3 pt_light_color = {1.0f, 0.7f, 0.3f};
     float pt_light_intensity = 1.0f;
     bool pt_light_enabled = false;
