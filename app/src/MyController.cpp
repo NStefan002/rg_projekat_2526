@@ -26,7 +26,7 @@ bool MyController::loop() {
 void MyController::poll_events() {
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
 
-    if (platform->key(engine::platform::KEY_F4).state() == engine::platform::Key::State::JustPressed) {
+    if (platform->key(engine::platform::KEY_F5).state() == engine::platform::Key::State::JustPressed) {
         event_triggered = true;
         spdlog::info("Event triggered");
     }
@@ -64,7 +64,7 @@ void MyController::update() {
         camera->rotate_camera(5.0f, 0.0f);
     }
 
-    if (platform->key(engine::platform::KEY_F3).state() == engine::platform::Key::State::JustPressed) {
+    if (platform->key(engine::platform::KEY_F4).state() == engine::platform::Key::State::JustPressed) {
         cursor_enabled = !cursor_enabled;
         platform->set_enable_cursor(cursor_enabled);
     }

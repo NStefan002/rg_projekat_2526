@@ -20,15 +20,15 @@ void MyGUIController::update() {
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
 
     // toggle camera info
-    if (platform->key(engine::platform::KEY_C).state() == engine::platform::Key::State::JustPressed) {
+    if (platform->key(engine::platform::KEY_F1).state() == engine::platform::Key::State::JustPressed) {
         show_camera_info = !show_camera_info;
     }
     // toggle help
-    if (platform->key(engine::platform::KEY_H).state() == engine::platform::Key::State::JustPressed) {
+    if (platform->key(engine::platform::KEY_F2).state() == engine::platform::Key::State::JustPressed) {
         show_help = !show_help;
     }
     // toggle point light menu
-    if (platform->key(engine::platform::KEY_L).state() == engine::platform::Key::State::JustPressed) {
+    if (platform->key(engine::platform::KEY_F3).state() == engine::platform::Key::State::JustPressed) {
         show_point_light_menu = !show_point_light_menu;
     }
 }
@@ -74,11 +74,11 @@ void MyGUIController::draw_help() {
     ImGui::Text("Arrow keys: Rotate camera");
     ImGui::Text("Mouse movement: Rotate camera");
     ImGui::Text("Mouse scroll: Zoom camera");
-    ImGui::Text("C: Toggle camera info");
-    ImGui::Text("H: Toggle help");
-    ImGui::Text("L: Toggle point light colors");
-    ImGui::Text("F3: Toggle cursor");
-    ImGui::Text("F4: Trigger event");
+    ImGui::Text("F1: Toggle camera info");
+    ImGui::Text("F2: Toggle help");
+    ImGui::Text("F3: Toggle point light menu");
+    ImGui::Text("F4: Toggle cursor");
+    ImGui::Text("F5: Trigger event");
     ImGui::Text("ESC: Exit application");
     ImGui::End();
 }
