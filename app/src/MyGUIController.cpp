@@ -72,6 +72,7 @@ void MyGUIController::draw_help() {
     ImGui::Begin("Help");
     ImGui::Text("WASD: Move camera");
     ImGui::Text("Arrow keys: Rotate camera");
+    ImGui::Text("Hold Shift: Increase movement/rotate speed");
     ImGui::Text("Mouse movement: Rotate camera");
     ImGui::Text("Mouse scroll: Zoom camera");
     ImGui::Text("F1: Toggle camera info");

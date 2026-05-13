@@ -37,31 +37,34 @@ void MyController::update() {
     auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
     float delta_time = platform->dt();
 
+    bool shift_pressed = platform->key(engine::platform::KEY_LEFT_SHIFT).state() == engine::platform::Key::State::Pressed ||
+                         platform->key(engine::platform::KEY_RIGHT_SHIFT).state() == engine::platform::Key::State::Pressed;
+
     if (platform->key(engine::platform::KEY_W).state() == engine::platform::Key::State::Pressed) {
-        camera->move_camera(engine::graphics::Camera::Movement::FORWARD, delta_time);
+        camera->move_camera(engine::graphics::Camera::Movement::FORWARD, delta_time * (shift_pressed ? 3.0f : 1.0f));// move faster when shift is held
     }
     if (platform->key(engine::platform::KEY_S).state() == engine::platform::Key::State::Pressed) {
-        camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, delta_time);
+        camera->move_camera(engine::graphics::Camera::Movement::BACKWARD, delta_time * (shift_pressed ? 3.0f : 1.0f));
     }
     if (platform->key(engine::platform::KEY_A).state() == engine::platform::Key::State::Pressed) {
-        camera->move_camera(engine::graphics::Camera::Movement::LEFT, delta_time);
+        camera->move_camera(engine::graphics::Camera::Movement::LEFT, delta_time * (shift_pressed ? 3.0f : 1.0f));
     }
     if (platform->key(engine::platform::KEY_D).state() == engine::platform::Key::State::Pressed) {
-        camera->move_camera(engine::graphics::Camera::Movement::RIGHT, delta_time);
+        camera->move_camera(engine::graphics::Camera::Movement::RIGHT, delta_time * (shift_pressed ? 3.0f : 1.0f));
     }
 
     // rotate camera with arrow keys
     if (platform->key(engine::platform::KEY_UP).state() == engine::platform::Key::State::Pressed) {
-        camera->rotate_camera(0.0f, 5.0f);
+        camera->rotate_camera(0.0f, shift_pressed ? 15.0f : 5.0f);// rotate faster when shift is held
     }
     if (platform->key(engine::platform::KEY_DOWN).state() == engine::platform::Key::State::Pressed) {
-        camera->rotate_camera(0.0f, -5.0f);
+        camera->rotate_camera(0.0f, shift_pressed ? -15.0f : -5.0f);
     }
     if (platform->key(engine::platform::KEY_LEFT).state() == engine::platform::Key::State::Pressed) {
-        camera->rotate_camera(-5.0f, 0.0f);
+        camera->rotate_camera(shift_pressed ? -15.0f : -5.0f, 0.0f);
     }
     if (platform->key(engine::platform::KEY_RIGHT).state() == engine::platform::Key::State::Pressed) {
-        camera->rotate_camera(5.0f, 0.0f);
+        camera->rotate_camera(shift_pressed ? 15.0f : 5.0f, 0.0f);
     }
 
     if (platform->key(engine::platform::KEY_F4).state() == engine::platform::Key::State::JustPressed) {
