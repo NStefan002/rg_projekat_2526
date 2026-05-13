@@ -175,6 +175,10 @@ void MyController::update_event_stage(float delta_time) {
             // gradually decrease the directional light intensity to simulate the sun setting
             float progress = std::min(1.0f, event_timer / night_duration);
             dir_light_diffuse = (1.0f - progress) * dir_light_diffuse_orig;
+
+            // noon (90 deg) -> sunset (0 deg)
+            float dir_light_angle = glm::radians(90.0f * (1.0f - progress));
+            dir_light_direction = glm::vec3(-glm::cos(dir_light_angle), -glm::sin(dir_light_angle), -0.3f);
             break;
         }
         case Stage::Night: {
@@ -183,6 +187,7 @@ void MyController::update_event_stage(float delta_time) {
                 event_timer = 0.0f;
                 event_triggered = false;
                 dir_light_diffuse = dir_light_diffuse_orig;
+                dir_light_direction = dir_light_direction_orig;
                 spdlog::info("Event stage changed to Day");
                 break;
             }
@@ -194,6 +199,10 @@ void MyController::update_event_stage(float delta_time) {
             // gradually increase the directional light intensity to simulate the sun rising
             float progress = std::min(1.0f, event_timer / day_duration);
             dir_light_diffuse = progress * dir_light_diffuse_orig;
+
+            // sunrise (0 deg) -> noon (90 deg)
+            float dir_light_angle = glm::radians(90.0f * progress);
+            dir_light_direction = glm::vec3(glm::cos(dir_light_angle), -glm::sin(dir_light_angle), -0.3f);
             break;
         }
     }

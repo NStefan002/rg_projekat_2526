@@ -14,7 +14,8 @@ private:
 
     // directional light
     const glm::vec3 dir_light_diffuse_orig = {0.6f, 0.6f, 0.6f};
-    glm::vec3 dir_light_direction = {-0.5f, -1.0f, -0.3f};
+    const glm::vec3 dir_light_direction_orig = {0.0f, -1.0f, -0.3f};
+    glm::vec3 dir_light_direction = dir_light_direction_orig;
     glm::vec3 dir_light_ambient = {0.2f, 0.2f, 0.2f};
     glm::vec3 dir_light_diffuse = dir_light_diffuse_orig;
     glm::vec3 dir_light_specular = {0.4f, 0.4f, 0.4f};
