@@ -45,7 +45,6 @@ private:
     float event_timer = 0.0f;
     bool event_triggered = false;
     const float night_duration = 10.0f;
-    const float lightshow_duration = 5.0f;
     const float day_duration = 10.0f;
 
     void draw_model(engine::resources::Shader *shader);
