@@ -13,6 +13,22 @@ void MyController::initialize() {
 
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     platform->set_enable_cursor(cursor_enabled);
+
+    if (ma_engine_init(nullptr, &audio_engine) == MA_SUCCESS) {
+        audio_initialized = true;
+        spdlog::info("Audio engine initialized successfully");
+
+        if (ma_sound_init_from_file(&audio_engine, "resources/audio/kadinjaca.mp3",
+                                    MA_SOUND_FLAG_DECODE, nullptr, nullptr,
+                                    &audio_sound) == MA_SUCCESS) {
+            audio_loaded = true;
+            spdlog::info("Audio loaded");
+        } else {
+            spdlog::warn("Failed to load audio file");
+        }
+    } else {
+        spdlog::warn("Failed to initialize audio engine");
+    }
 }
 
 bool MyController::loop() {
@@ -84,6 +100,7 @@ void MyController::update() {
     if (event_triggered) {
         update_event_stage(delta_time);
     }
+    play_pause(delta_time);
     restrict_camera();
 }
 
@@ -103,6 +120,12 @@ void MyController::end_draw() {
 }
 
 void MyController::terminate() {
+    if (audio_loaded) {
+        ma_sound_uninit(&audio_sound);
+    }
+    if (audio_initialized) {
+        ma_engine_uninit(&audio_engine);
+    }
 }
 
 void MyController::draw_model(engine::resources::Shader *shader) {
@@ -204,6 +227,29 @@ void MyController::update_event_stage(float delta_time) {
             float dir_light_angle = glm::radians(90.0f * progress);
             dir_light_direction = glm::vec3(glm::cos(dir_light_angle), -glm::sin(dir_light_angle), -0.3f);
             break;
+        }
+    }
+}
+
+void MyController::play_pause(float delta_time) {
+    if (!audio_initialized) {
+        return;
+    }
+
+    auto camera = engine::core::Controller::get<engine::graphics::GraphicsController>()->camera();
+    bool moved = glm::distance(camera->Position, last_camera_position) > 0.01f;
+    last_camera_position = camera->Position;
+    if (!moved) {
+        if (audio_loaded && audio_playing) {
+            ma_sound_stop(&audio_sound);
+            audio_playing = false;
+            spdlog::info("Audio paused");
+        }
+    } else {
+        if (audio_loaded && !audio_playing) {
+            ma_sound_start(&audio_sound);
+            audio_playing = true;
+            spdlog::info("Audio started/resumed");
         }
     }
 }
