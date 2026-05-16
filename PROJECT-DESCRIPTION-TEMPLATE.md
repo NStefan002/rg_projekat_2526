@@ -63,3 +63,7 @@ remembrance. From Slavko Vukosavljević’s song 'Kadinjača':
 ## Skyboxes
 
 - [skybox](https://freestylized.com/skybox/sky_93/)
+
+## External libraries (other than the ones provided by the project skeleton)
+
+- [miniaudio](https://github.com/mackron/miniaudio)
