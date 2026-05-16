@@ -81,7 +81,7 @@ void MyGUIController::draw_help() {
     ImGui::Text("F4: Toggle cursor");
     ImGui::Text("F5: Trigger event");
     ImGui::Text("ESC: Exit application");
-    ImGui::Text("\nStand to honor the past,\nmove to hear its echo.");
+    ImGui::Text("\nStand still to honor the past,\n move to hear its echo.");
     ImGui::End();
 }
 
