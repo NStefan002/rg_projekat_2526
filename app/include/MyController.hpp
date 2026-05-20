@@ -1,7 +1,6 @@
 #pragma once
 #include <MyGUIController.hpp>
 #include <engine/core/Engine.hpp>
-#include <miniaudio.h>
 #include <vector>
 
 class MyController final : public engine::core::Controller {
@@ -49,11 +48,6 @@ private:
     const float night_duration = 10.0f;
     const float day_duration = 10.0f;
 
-    ma_engine audio_engine;
-    ma_sound audio_sound;
-    bool audio_initialized = false;
-    bool audio_loaded = false;
-    bool audio_playing = false;
     glm::vec3 last_camera_position = camera_start_position;
 
     void draw_model(engine::resources::Shader *shader);

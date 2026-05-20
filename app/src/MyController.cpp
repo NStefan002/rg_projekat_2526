@@ -13,22 +13,6 @@ void MyController::initialize() {
 
     auto platform = engine::core::Controller::get<engine::platform::PlatformController>();
     platform->set_enable_cursor(cursor_enabled);
-
-    if (ma_engine_init(nullptr, &audio_engine) == MA_SUCCESS) {
-        audio_initialized = true;
-        spdlog::info("Audio engine initialized successfully");
-
-        if (ma_sound_init_from_file(&audio_engine, "resources/audio/kadinjaca.mp3",
-                                    MA_SOUND_FLAG_DECODE, nullptr, nullptr,
-                                    &audio_sound) == MA_SUCCESS) {
-            audio_loaded = true;
-            spdlog::info("Audio loaded");
-        } else {
-            spdlog::warn("Failed to load audio file");
-        }
-    } else {
-        spdlog::warn("Failed to initialize audio engine");
-    }
 }
 
 bool MyController::loop() {
@@ -120,12 +104,6 @@ void MyController::end_draw() {
 }
 
 void MyController::terminate() {
-    if (audio_loaded) {
-        ma_sound_uninit(&audio_sound);
-    }
-    if (audio_initialized) {
-        ma_engine_uninit(&audio_engine);
-    }
 }
 
 void MyController::draw_model(engine::resources::Shader *shader) {
@@ -232,7 +210,9 @@ void MyController::update_event_stage(float delta_time) {
 }
 
 void MyController::play_pause(float delta_time) {
-    if (!audio_initialized) {
+    auto *resources = engine::core::Controller::get<engine::resources::ResourcesController>();
+    auto *sound = resources->audio("kadinjaca");
+    if (!sound) {
         return;
     }
 
@@ -240,15 +220,13 @@ void MyController::play_pause(float delta_time) {
     bool moved = glm::distance(camera->Position, last_camera_position) > 0.01f;
     last_camera_position = camera->Position;
     if (!moved) {
-        if (audio_loaded && audio_playing) {
-            ma_sound_stop(&audio_sound);
-            audio_playing = false;
+        if (sound->is_playing()) {
+            sound->pause();
             spdlog::info("Audio paused");
         }
     } else {
-        if (audio_loaded && !audio_playing) {
-            ma_sound_start(&audio_sound);
-            audio_playing = true;
+        if (!sound->is_playing()) {
+            sound->play();
             spdlog::info("Audio started/resumed");
         }
     }

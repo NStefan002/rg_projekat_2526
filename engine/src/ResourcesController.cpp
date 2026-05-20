@@ -1,13 +1,14 @@
 #include <assimp/Importer.hpp>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
+#include <engine/audio/AudioController.hpp>
 #include <engine/graphics/OpenGL.hpp>
+#include <engine/resources/Audio.hpp>
 #include <engine/resources/ResourcesController.hpp>
 #include <engine/resources/ShaderCompiler.hpp>
 #include <engine/util/Configuration.hpp>
 #include <engine/util/Errors.hpp>
 #include <spdlog/spdlog.h>
-#include <unordered_set>
 #include <utility>
 
 namespace engine::resources {
@@ -17,6 +18,7 @@ void ResourcesController::initialize() {
     load_models();
     load_textures();
     load_skyboxes();
+    load_audio();
 }
 
 void ResourcesController::terminate() {
@@ -30,6 +32,9 @@ void ResourcesController::terminate() {
         resource->destroy();
     }
     for (auto &[name, resource]: m_sky_boxes) {
+        resource->destroy();
+    }
+    for (auto &[name, resource]: m_audio) {
         resource->destroy();
     }
 }
@@ -79,6 +84,41 @@ void ResourcesController::load_skyboxes() {
     for (const auto &sky_boxes_entry: std::filesystem::directory_iterator(m_skyboxes_path)) {
         skybox(sky_boxes_entry.path().stem().string(), sky_boxes_entry.path());
     }
+}
+
+void ResourcesController::load_audio() {
+    if (!exists(m_audio_path)) {
+        spdlog::info("[ResourcesController]: no {} found to load audio from", m_audio_path.string());
+        return;
+    }
+    for (const auto &entry: std::filesystem::directory_iterator(m_audio_path)) {
+        if (entry.is_regular_file()) {
+            audio(entry.path().stem().string());
+        }
+    }
+}
+
+Audio *ResourcesController::audio(const std::string &name) {
+    auto &result = m_audio[name];
+    if (!result) {
+        auto *audio_ctrl = core::Controller::get<audio::AudioController>();
+        ma_engine *engine = audio_ctrl->engine_handle();
+        if (!engine) {
+            spdlog::warn("[ResourcesController]: audio engine not available, cannot load '{}'", name);
+            return nullptr;
+        }
+        if (exists(m_audio_path)) {
+            for (const auto &entry: std::filesystem::directory_iterator(m_audio_path)) {
+                if (entry.is_regular_file() && entry.path().stem().string() == name) {
+                    result = std::unique_ptr<Audio>(new Audio(engine, entry.path()));
+                    return result.get();
+                }
+            }
+        }
+        spdlog::warn("[ResourcesController]: audio file '{}' not found in '{}'", name, m_audio_path.string());
+        return nullptr;
+    }
+    return result.get();
 }
 
 /**
