@@ -1,3 +1,4 @@
+#include <engine/audio/AudioController.hpp>
 #include <engine/core/App.hpp>
 #include <engine/platform/PlatformController.hpp>
 #include <engine/resources/ResourcesController.hpp>
@@ -37,10 +38,12 @@ void App::engine_setup(int argc, char **argv) {
     auto platform = register_controller<platform::PlatformController>();
     auto graphics = register_controller<graphics::GraphicsController>();
     auto resources = register_controller<resources::ResourcesController>();
+    auto audio = register_controller<audio::AudioController>();
     auto end = register_controller<EngineControllersEnd>();
     begin->before(platform);
     platform->before(graphics);
     graphics->before(resources);
+    audio->before(resources);
     resources->before(end);
 }
 
