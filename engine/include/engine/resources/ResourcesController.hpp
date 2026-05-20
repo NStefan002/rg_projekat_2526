@@ -70,6 +70,16 @@ public:
     */
     Shader *shader(const std::string &name, const std::filesystem::path &path = "");
 
+    /**
+    * @brief Retrieves the @ref Audio with a given name. You are not supposed to call `delete` on this pointer.
+    *
+    * The audio file is looked up by its filename stem (without extension) in the
+    * `resources/audio` directory. If not already loaded, it will be loaded lazily.
+    * Returns nullptr if the audio engine was not initialized or the file is not found.
+    *
+    * @param name Stem of the audio filename (without extension), e.g. `"song"`.
+    * @returns The pointer to the @ref Audio associated with the `name`, or nullptr on failure.
+    */
     Audio *audio(const std::string &name);
 
 private:
@@ -103,6 +113,9 @@ private:
     */
     void load_shaders();
 
+    /**
+    * @brief Loads all the audio files from the "resources/audio" directory. Called during @ref ResourcesController::initialize.
+    */
     void load_audio();
 
     /**
@@ -121,7 +134,9 @@ private:
     * @brief A hashmap of all the loaded @ref Shader.
     */
     std::unordered_map<std::string, std::unique_ptr<Shader>> m_shaders;
-
+    /**
+    * @brief A hashmap of all the loaded @ref Audio.
+    */
     std::unordered_map<std::string, std::unique_ptr<Audio>> m_audio;
 
     const std::filesystem::path m_models_path = "resources/models";
