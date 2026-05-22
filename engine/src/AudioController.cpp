@@ -12,20 +12,6 @@ void AudioController::initialize() {
     spdlog::info("AudioController: audio engine initialized successfully");
 }
 
-// unused overrides
-
-bool AudioController::loop() { return true; }
-
-void AudioController::poll_events() {}
-
-void AudioController::update() {}
-
-void AudioController::begin_draw() {}
-
-void AudioController::draw() {}
-
-void AudioController::end_draw() {}
-
 void AudioController::terminate() {
     if (m_initialized) {
         ma_engine_uninit(&m_engine);
