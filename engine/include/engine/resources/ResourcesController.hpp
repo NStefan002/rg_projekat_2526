@@ -1,6 +1,6 @@
 /**
  * @file ResourcesController.hpp
- * @brief Defines the ResourcesController class  that manages resources such as models, textures, shaders, and skyboxes.
+ * @brief Defines the ResourcesController class  that manages resources such as models, textures, shaders, skyboxes and audio.
 */
 
 #ifndef MATF_RG_PROJECT_RESOURCES_CONTROLLER_HPP
@@ -17,7 +17,7 @@
 namespace engine::resources {
 /**
 * @class ResourcesController
-* @brief Manages app resources: @ref Model, @ref Texture, @ref Shader, and @ref Skybox.
+* @brief Manages app resources: @ref Model, @ref Texture, @ref Shader, @ref Skybox and @ref Audio.
 */
 class ResourcesController final : public core::Controller {
 public:
@@ -75,10 +75,10 @@ public:
     *
     * The audio file is looked up by its filename stem (without extension) in the
     * `resources/audio` directory. If not already loaded, it will be loaded lazily.
-    * Returns nullptr if the audio engine was not initialized or the file is not found.
+    * Throws exception if the audio engine was not initialized or the file is not found.
     *
     * @param name Stem of the audio filename (without extension), e.g. `"song"`.
-    * @returns The pointer to the @ref Audio associated with the `name`, or nullptr on failure.
+    * @returns The pointer to the @ref Audio associated with the `name`.
     */
     Audio *audio(const std::string &name);
 
