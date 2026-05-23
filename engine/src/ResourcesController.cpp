@@ -104,19 +104,21 @@ Audio *ResourcesController::audio(const std::string &name) {
         auto *audio_ctrl = core::Controller::get<audio::AudioController>();
         ma_engine *engine = audio_ctrl->engine_handle();
         if (!engine) {
-            spdlog::warn("[ResourcesController]: audio engine not available, cannot load '{}'", name);
-            return nullptr;
+            throw util::EngineError(util::EngineError::Type::AssetLoadingError, "Audio engine not available, cannot load audio.");
         }
-        if (exists(m_audio_path)) {
-            for (const auto &entry: std::filesystem::directory_iterator(m_audio_path)) {
-                if (entry.is_regular_file() && entry.path().stem().string() == name) {
-                    result = std::unique_ptr<Audio>(new Audio(engine, entry.path()));
-                    return result.get();
-                }
+        if (!exists(m_audio_path)) {
+            throw util::EngineError(util::EngineError::Type::AssetLoadingError, std::format("Audio path '{}' does not exist, cannot load audio.", m_audio_path.string()));
+        }
+        bool entry_found = false;
+        for (const auto &entry: std::filesystem::directory_iterator(m_audio_path)) {
+            if (entry.is_regular_file() && entry.path().stem().string() == name) {
+                result = std::unique_ptr<Audio>(new Audio(engine, entry.path()));
+                entry_found = true;
             }
         }
-        spdlog::warn("[ResourcesController]: audio file '{}' not found in '{}'", name, m_audio_path.string());
-        return nullptr;
+        if (!entry_found) {
+            throw util::EngineError(util::EngineError::Type::AssetLoadingError, std::format("Audio file '{}' not found, cannot load audio.", name));
+        }
     }
     return result.get();
 }

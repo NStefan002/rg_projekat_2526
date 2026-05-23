@@ -1,3 +1,4 @@
+#include "engine/util/Errors.hpp"
 #include <engine/resources/Audio.hpp>
 #include <spdlog/spdlog.h>
 
@@ -8,9 +9,10 @@ Audio::Audio(ma_engine *engine, const std::filesystem::path &path) {
                                 MA_SOUND_FLAG_DECODE, nullptr, nullptr,
                                 &m_sound) == MA_SUCCESS) {
         m_loaded = true;
-        spdlog::info("[ResourcesController]: loaded audio '{}'", path.string());
+        spdlog::info("[ResourcesController]: initialized audio '{}'", path.string());
     } else {
-        spdlog::warn("[ResourcesController]: failed to load audio '{}'", path.string());
+        throw util::EngineError(util::EngineError::Type::AssetLoadingError,
+                                std::format("Failed to initialize audio '{}'", path.string()));
     }
 }
 
