@@ -10,12 +10,13 @@
 
 #include <engine/core/Controller.hpp>
 
-
+#include <engine/audio/AudioController.hpp>
 #include <engine/platform/Input.hpp>
 #include <engine/platform/PlatformController.hpp>
 #include <engine/platform/Window.hpp>
 
 #include <engine/graphics/Camera.hpp>
+#include <engine/graphics/GraphicsController.hpp>
 #include <engine/graphics/OpenGL.hpp>
 
 #include <engine/util/ArgParser.hpp>
@@ -23,6 +24,7 @@
 #include <engine/util/Errors.hpp>
 #include <engine/util/Utils.hpp>
 
+#include <engine/resources/Audio.hpp>
 #include <engine/resources/Model.hpp>
 #include <engine/resources/ResourcesController.hpp>
 #include <engine/resources/Shader.hpp>
