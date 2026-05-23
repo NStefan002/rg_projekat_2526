@@ -43,6 +43,7 @@ void App::engine_setup(int argc, char **argv) {
     begin->before(platform);
     platform->before(graphics);
     graphics->before(resources);
+    audio->after(begin);
     audio->before(resources);
     resources->before(end);
 }
